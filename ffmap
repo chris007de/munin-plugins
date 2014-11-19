@@ -18,6 +18,7 @@ use LWP::Simple;
 need_multigraph();
 
 # data
+my $nodesurl = "http://37.120.168.150/ffmap-d3/nodes.json";
 my $nodes_ref;
 my @state_vector = restore_state();
 
@@ -40,8 +41,8 @@ my %last_seen_m;
 my %personal_node;
 
 sub get_node_data {
-    if ( defined $ENV{nodesurl} ) {
-        my $content = get( $ENV{nodesurl} );
+    if ( defined $nodesurl ) {
+        my $content = get( $nodesurl );
         die 'Could not get it!' unless defined $content;
         $nodes_ref = decode_json($content);
     }
@@ -132,7 +133,7 @@ sub deserialize_state {
         # skip this entry if too old, it will not be written again later
         my $entry_age
             = gmtime() - Time::Piece->strptime( $timestamp, "%s" );
-        if ( $entry_age->years > 1 ) { next; }
+        if ( $entry_age->hours > 1 ) { next; }
 
         # distinguish different categories and handle them
         if ( $category eq 'last_seen_m' ) {
@@ -222,37 +223,37 @@ deserialize_state();
 
 if ( $ARGV[0] and $ARGV[0] eq "config" ) {
     # Nodes and Clients
-    print "multigraph ffmap_all_nodes\n";
+    print "multigraph ffmuc_all_nodes\n";
     print "graph_title Freifunk Nodes and Clients\n";
     print "graph_args --base 1000 --lower-limit 0\n";
     print "graph_scale no\n";
-    print "graph_category freifunk\n";
+    print "graph_category ffmuc\n";
     print "graph_vlabel #\n";
     print "online.label online\n";
     print "online.type GAUGE\n";
     print "online.draw AREASTACK\n";
     print "online.min 0\n";
-    print "online.colour COLOUR0\n";
+    print "online.colour 00FF00\n";
     print "online.info Number of online nodes.\n";
     print "offline.label offline\n";
     print "offline.type GAUGE\n";
     print "offline.draw AREASTACK\n";
     print "offline.min 0\n";
-    print "offline.colour COLOUR8\n";
+    print "offline.colour FF0000\n";
     print "offline.info Number of offline nodes.\n";
     print "clients.label clients\n";
     print "clients.type GAUGE\n";
     print "clients.min 0\n";
-    print "clients.colour COLOUR1\n";
+    print "clients.colour 0000FF\n";
     print "clients.info Sum of clients over all nodes.\n";
 
     # Personal Nodes
     if ( scalar keys %personal_node > 0 ) {
-        print "multigraph ffmap_personal_nodes\n";
+        print "multigraph ffmuc_personal_nodes\n";
         print "graph_title Personal Freifunk Nodes\n";
         print "graph_args --base 1000 --lower-limit 0\n";
         print "graph_scale no\n";
-        print "graph_category freifunk\n";
+        print "graph_category ffmuc\n";
         print "graph_vlabel Clients\n";
 
         foreach my $key ( sort keys %personal_node ) {
@@ -265,11 +266,11 @@ if ( $ARGV[0] and $ARGV[0] eq "config" ) {
     }
 
     # Node Models
-    print "multigraph ffmap_models\n";
+    print "multigraph ffmuc_models\n";
     print "graph_title Freifunk Node Models\n";
     print "graph_args --base 1000 --lower-limit 0\n";
     print "graph_scale no\n";
-    print "graph_category freifunk\n";
+    print "graph_category ffmuc\n";
     print "graph_vlabel Nodes\n";
 
     foreach my $key ( sort keys %model_name ) {
@@ -282,11 +283,11 @@ if ( $ARGV[0] and $ARGV[0] eq "config" ) {
     }
 
     # Node Firmware Versions
-    print "multigraph ffmap_firmware_versions\n";
+    print "multigraph ffmuc_firmware_versions\n";
     print "graph_title Freifunk Node Firmware Versions\n";
     print "graph_args --base 1000 --lower-limit 0\n";
     print "graph_scale no\n";
-    print "graph_category freifunk\n";
+    print "graph_category ffmuc\n";
     print "graph_vlabel Nodes\n";
 
     foreach my $key ( sort keys %firmware_name ) {
@@ -308,7 +309,7 @@ serialize_state();
 
 # all nodes graph values
 my $offline_nodes = $node_count - $sum_online_nodes;
-print "multigraph ffmap_all_nodes\n";
+print "multigraph ffmuc_all_nodes\n";
 print "online.value $sum_online_nodes\n";
 print "offline.value $offline_nodes\n";
 print "clients.value $sum_clientcount\n";
@@ -316,7 +317,7 @@ print "clients.value $sum_clientcount\n";
 # process personal nodes/clients graph
 count_personal_nodes_clients();
 if ( scalar keys %personal_node > 0 ) {
-    print "multigraph ffmap_personal_nodes\n";
+    print "multigraph ffmuc_personal_nodes\n";
 
     foreach my $key ( sort keys %personal_node ) {
         print $key
@@ -326,13 +327,13 @@ if ( scalar keys %personal_node > 0 ) {
 }
 
 # models
-print "multigraph ffmap_models\n";
+print "multigraph ffmuc_models\n";
 foreach my $key ( sort keys %model_count ) {
     print "${key}.value " . $model_count{$key} . "\n";
 }
 
 # firmware
-print "multigraph ffmap_firmware_versions\n";
+print "multigraph ffmuc_firmware_versions\n";
 foreach my $key ( sort keys %firmware_count ) {
     print "${key}.value " . $firmware_count{$key} . "\n";
 }

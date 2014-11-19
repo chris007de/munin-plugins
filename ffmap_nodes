@@ -28,7 +28,7 @@ sub get_node_data {
         my $content = get( $nodesurl );
         die 'Could not get it!' unless defined $content;
         $nodes_ref = decode_json($content);
-        @macs = keys % { $nodes_ref };      
+        @macs = keys % { $nodes_ref };   
     }
     else {
         die 'URL to get nodes.json not configured!';
@@ -41,21 +41,53 @@ get_node_data();
 if ( $ARGV[0] and $ARGV[0] eq "config" ) {   
 
     foreach my $mac ( @macs ) {
-    print "multigraph clients_" . clean_fieldname($mac) . "\n";
-    print "graph_title Clients " . clean_fieldname($mac) . "\n";
-    print "graph_args --base 1000 --lower-limit 0\n";
-    print "graph_scale no\n";
-    print "graph_category freifunk-node\n";
+    my $cleanmac = $mac;
+    $cleanmac =~ s/://g;
+    print "multigraph ffmuc-clients-" . $cleanmac . "\n";
+    print "graph_title Clients on Node " . $mac . "\n";
+    print "graph_args -l 0\n";
+    print "graph_category ffmuc-node-" . $cleanmac . "\n";
     print "graph_vlabel Clients\n";
     print "wifi.label wifi\n";
-    print "wifi.min 0\n";
-    print "wifi.colour 00FF00\n";
+    print "other.draw AREASTACK\n";
     print "wifi.info Clients connected over wifi.\n";
-    print "total.label wifi\n";
-    print "total.draw AREA\n";
-    print "total.min 0\n";
-    print "total.colour FF0000\n";
-    print "total.info Total number of clients.\n";
+    print "other.label other\n";
+    print "other.draw AREASTACK\n";
+    print "other.info Other connectivity.\n";
+
+    print "multigraph ffmuc-uptime-" . $cleanmac . "\n";
+    print "graph_title Uptime of " . $mac . "\n";
+    print "graph_args --base 1000 -l 0\n";
+    print "graph_category ffmuc-node-" . $cleanmac . "\n";
+    print "graph_vlabel hours\n";
+    print "uptime.label uptime\n";
+    print "uptime.draw AREA\n";
+    print "idletime.label idletime\n";
+    print "idletime.draw AREA\n";
+
+    print "multigraph ffmuc-loadavg-" . $cleanmac . "\n";
+    print "graph_title Load of " . $mac . "\n";
+    print "graph_args --base 1000 -u 100 -l 0\n";
+    print "graph_category ffmuc-node-" . $cleanmac . "\n";
+    print "graph_vlabel %\n";
+    print "loadavg.label loadavg\n";
+
+    print "multigraph ffmuc-traffic-" . $cleanmac . "\n";
+    print "graph_title Traffic of " . $mac . "\n";
+    print "graph_args --base 1024 -l 0\n";
+    print "graph_category ffmuc-node-" . $cleanmac . "\n";
+    print "graph_vlabel bytes\n";
+    print "tx.label tx\n";
+    print "tx.draw AREASTACK\n";
+    print "rx.label tx\n";
+    print "rx.draw AREASTACK\n";
+    print "mgmt_tx.label mgmt_tx\n";
+    print "mgmt_tx.draw AREASTACK\n";
+    print "mgmt_rx.label mgmt_rx\n";
+    print "mgmt_rx.draw AREASTACK\n";
+    print "forward.label forward\n";
+    print "forward.draw AREASTACK\n";
+
     }
 
     exit 0;
@@ -63,7 +95,51 @@ if ( $ARGV[0] and $ARGV[0] eq "config" ) {
 
 # all nodes graph values
 foreach my $mac ( @macs ) {
-print "multigraph clients_" . clean_fieldname($mac) . "\n";
-print "wifi.value " . $nodes_ref->{$mac}->{'clients'}->{'wifi'} . "\n";
-print "total.value " . $nodes_ref->{$mac}->{'clients'}->{'total'} . "\n";
+my $cleanmac = $mac;
+$cleanmac =~ s/://g;
+
+my $wifi_clients = $nodes_ref->{$mac}->{'clients'}->{'wifi'};
+my $other_clients;
+if(defined $wifi_clients) {
+    $other_clients = $nodes_ref->{$mac}->{'clients'}->{'total'} - $wifi_clients;    
+}
+else
+{
+    $wifi_clients = 0;
+    $other_clients = 0;
+}
+
+
+my $uptime = $nodes_ref->{$mac}->{'uptime'};
+$uptime = int($uptime / 3600);
+my $idletime = $nodes_ref->{$mac}->{'idletime'};
+$idletime = int($idletime / 3600);
+
+my $loadavg = $nodes_ref->{$mac}->{'loadavg'};
+$loadavg = int($loadavg * 100);
+
+my $tx = $nodes_ref->{$mac}->{'traffic'}->{'tx'}->{'bytes'};
+my $rx = $nodes_ref->{$mac}->{'traffic'}->{'rx'}->{'bytes'};
+my $mgmt_tx = $nodes_ref->{$mac}->{'traffic'}->{'mgmt_tx'}->{'bytes'};
+my $mgmt_rx = $nodes_ref->{$mac}->{'traffic'}->{'mgmt_rx'}->{'bytes'};
+my $forward = $nodes_ref->{$mac}->{'traffic'}->{'forward'}->{'bytes'};
+
+print "multigraph ffmuc-clients-" . $cleanmac . "\n";
+print "wifi.value $wifi_clients\n";
+print "other.value $other_clients\n";
+
+print "multigraph ffmuc-uptime-" . $cleanmac . "\n";
+print "uptime.value $uptime\n";
+print "idletime.value $idletime\n";
+
+print "multigraph ffmuc-loadavg-" . $cleanmac . "\n";
+print "loadavg.value $loadavg\n";
+
+print "multigraph ffmuc-traffic-" . $cleanmac . "\n";
+print "tx.value $tx\n";
+print "rx.value $rx\n";
+print "mgmt_tx.value $mgmt_tx\n";
+print "mgmt_rx.value $mgmt_rx\n";
+print "forward.value $forward\n";
+
 }
