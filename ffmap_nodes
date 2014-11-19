@@ -49,7 +49,7 @@ if ( $ARGV[0] and $ARGV[0] eq "config" ) {
     print "graph_category ffmuc-node-" . $cleanmac . "\n";
     print "graph_vlabel Clients\n";
     print "wifi.label wifi\n";
-    print "other.draw AREASTACK\n";
+    print "wifi.draw AREASTACK\n";
     print "wifi.info Clients connected over wifi.\n";
     print "other.label other\n";
     print "other.draw AREASTACK\n";
