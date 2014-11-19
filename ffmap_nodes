@@ -1,0 +1,69 @@
+#!/usr/bin/perl -w
+
+use strict;
+use warnings;
+use utf8;    # this script is written in utf8
+
+use lib $ENV{'MUNIN_LIBDIR'};
+use Munin::Plugin;
+
+use Data::Dumper;
+use Time::Piece;
+use Time::Seconds;
+
+use JSON;
+use LWP::Simple;
+
+# some munin init
+need_multigraph();
+
+# data
+my $nodesurl = "http://37.120.168.150/nodes_load";
+my $nodes_ref;
+my @macs;
+my @state_vector = restore_state();
+
+sub get_node_data {
+    if ( defined $nodesurl ) {
+        my $content = get( $nodesurl );
+        die 'Could not get it!' unless defined $content;
+        $nodes_ref = decode_json($content);
+        @macs = keys % { $nodes_ref };      
+    }
+    else {
+        die 'URL to get nodes.json not configured!';
+    }
+}
+
+### main
+get_node_data();
+
+if ( $ARGV[0] and $ARGV[0] eq "config" ) {   
+
+    foreach my $mac ( @macs ) {
+    print "multigraph clients_" . clean_fieldname($mac) . "\n";
+    print "graph_title Clients " . clean_fieldname($mac) . "\n";
+    print "graph_args --base 1000 --lower-limit 0\n";
+    print "graph_scale no\n";
+    print "graph_category freifunk-node\n";
+    print "graph_vlabel Clients\n";
+    print "wifi.label wifi\n";
+    print "wifi.min 0\n";
+    print "wifi.colour 00FF00\n";
+    print "wifi.info Clients connected over wifi.\n";
+    print "total.label wifi\n";
+    print "total.draw AREA\n";
+    print "total.min 0\n";
+    print "total.colour FF0000\n";
+    print "total.info Total number of clients.\n";
+    }
+
+    exit 0;
+}
+
+# all nodes graph values
+foreach my $mac ( @macs ) {
+print "multigraph clients_" . clean_fieldname($mac) . "\n";
+print "wifi.value " . $nodes_ref->{$mac}->{'clients'}->{'wifi'} . "\n";
+print "total.value " . $nodes_ref->{$mac}->{'clients'}->{'total'} . "\n";
+}
