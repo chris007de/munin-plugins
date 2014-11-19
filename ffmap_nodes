@@ -79,7 +79,7 @@ if ( $ARGV[0] and $ARGV[0] eq "config" ) {
     print "graph_vlabel bytes\n";
     print "tx.label tx\n";
     print "tx.draw AREASTACK\n";
-    print "rx.label tx\n";
+    print "rx.label rx\n";
     print "rx.draw AREASTACK\n";
     print "mgmt_tx.label mgmt_tx\n";
     print "mgmt_tx.draw AREASTACK\n";
