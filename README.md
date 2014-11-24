@@ -15,8 +15,8 @@ Prerequisistes
 -----
   
     sudo apt-get installbuild-essentials
-    cpan install JSON
-    cpan install LWP::Simple
+    cpan JSON
+    cpan LWP::Simple
 
 Install Munin Client and Server, for Munin Setup on Apache or nginx use Google
 
