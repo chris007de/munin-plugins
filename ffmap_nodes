@@ -18,7 +18,7 @@ use LWP::Simple;
 need_multigraph();
 
 # data
-my $nodesurl = "http://37.120.168.150/nodes_load";
+my $nodesurl = "http://map.freifunk-muenchen.de/nodes_load.json";
 my $nodes_ref;
 my @macs;
 my @state_vector = restore_state();

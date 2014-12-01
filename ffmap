@@ -18,7 +18,7 @@ use LWP::Simple;
 need_multigraph();
 
 # data
-my $nodesurl = "http://37.120.168.150/ffmap-d3/nodes.json";
+my $nodesurl = "http://map.freifunk-muenchen.de/nodes.json";
 my $nodes_ref;
 my @state_vector = restore_state();
 
@@ -61,6 +61,11 @@ sub get_node_data {
 
 sub proc_node_data {
     foreach my $node ( @{ $nodes_ref->{'nodes'} } ) {
+        if ( $node->{'flags'}->{'client'}
+             && $node->{'flags'}->{'online'} )
+        {
+          $sum_clientcount = $sum_clientcount + 1;
+        }
         if (!(     $node->{'flags'}->{'gateway'}
                 || $node->{'flags'}->{'client'}
             )
@@ -68,7 +73,7 @@ sub proc_node_data {
         {
             # number of online/offline nodes and client count
             $node_count++;
-            $sum_clientcount += $node->{'clientcount'};
+           # $sum_clientcount += $node->{'clientcount'};
             if ( $node->{'flags'}->{'online'} ) { $sum_online_nodes++ }
 
             # firmware versions (not wanted for gateways and clients)
