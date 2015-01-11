@@ -65,14 +65,6 @@ if ( $ARGV[0] and $ARGV[0] eq "config" ) {
     print "idletime.label idletime\n";
     print "idletime.draw AREA\n";
 
-    print "multigraph ffmuc-loadavg-" . $cleanmac . "\n";
-    print "graph_title Load of " . $mac . "\n";
-    print "graph_args --base 1000 -u 100 -l 0\n";
-    print "graph_category ffmuc-node-" . $cleanmac . "\n";
-    print "graph_vlabel %\n";
-    print "loadavg.label loadavg\n";
-
-
     print "multigraph ffmuc-trafficthroughput-" . $cleanmac . "\n";
     print "graph_title Traffic throughput of " . $mac . "\n";
     print "graph_args --base 1000 --logarithmic --units=si\n";
@@ -142,9 +134,6 @@ my $uptime = $nodes_ref->{$mac}->{'uptime'};
 $uptime = int($uptime / 3600);
 my $idletime = $nodes_ref->{$mac}->{'idletime'};
 $idletime = int($idletime / 3600);
-
-my $loadavg = $nodes_ref->{$mac}->{'loadavg'};
-$loadavg = int($loadavg * 100);
 
 my $tx = $nodes_ref->{$mac}->{'traffic'}->{'tx'}->{'bytes'};
 my $rx = $nodes_ref->{$mac}->{'traffic'}->{'rx'}->{'bytes'};
