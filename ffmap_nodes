@@ -149,9 +149,6 @@ print "multigraph ffmuc-uptime-" . $cleanmac . "\n";
 print "uptime.value $uptime\n";
 print "idletime.value $idletime\n";
 
-print "multigraph ffmuc-loadavg-" . $cleanmac . "\n";
-print "loadavg.value $loadavg\n";
-
 print "multigraph ffmuc-trafficthroughput-" . $cleanmac . "\n";
 print "txbit.value $tx\n";
 print "rxbit.value $rx\n";
