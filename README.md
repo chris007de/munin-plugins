@@ -14,7 +14,7 @@ Load `node_load.json` from an `alfred-json -r 159 -f json` output and plot infor
 Prerequisistes
 -----
   
-    sudo apt-get installbuild-essentials
+    sudo apt-get install build-essential
     cpan JSON
     cpan LWP::Simple
 
