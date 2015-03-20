@@ -19,6 +19,7 @@ need_multigraph();
 
 # data
 my $nodesurl = "http://map.freifunk-muenchen.de/nodes.json";
+my $nodeprefix = "ffmuc";
 my $nodes_ref;
 my @state_vector = restore_state();
 
@@ -228,7 +229,7 @@ deserialize_state();
 
 if ( $ARGV[0] and $ARGV[0] eq "config" ) {
     # Nodes and Clients
-    print "multigraph ffmuc_all_nodes\n";
+    print "multigraph ${nodeprefix}_all_nodes\n";
     print "graph_title Freifunk Nodes and Clients\n";
     print "graph_args --base 1000 --lower-limit 0\n";
     print "graph_scale no\n";
@@ -254,7 +255,7 @@ if ( $ARGV[0] and $ARGV[0] eq "config" ) {
 
     # Personal Nodes
     if ( scalar keys %personal_node > 0 ) {
-        print "multigraph ffmuc_personal_nodes\n";
+        print "multigraph ${nodeprefix}_personal_nodes\n";
         print "graph_title Personal Freifunk Nodes\n";
         print "graph_args --base 1000 --lower-limit 0\n";
         print "graph_scale no\n";
@@ -271,7 +272,7 @@ if ( $ARGV[0] and $ARGV[0] eq "config" ) {
     }
 
     # Node Models
-    print "multigraph ffmuc_models\n";
+    print "multigraph ${nodeprefix}_models\n";
     print "graph_title Freifunk Node Models\n";
     print "graph_args --base 1000 --lower-limit 0\n";
     print "graph_scale no\n";
@@ -288,7 +289,7 @@ if ( $ARGV[0] and $ARGV[0] eq "config" ) {
     }
 
     # Node Firmware Versions
-    print "multigraph ffmuc_firmware_versions\n";
+    print "multigraph ${nodeprefix}_firmware_versions\n";
     print "graph_title Freifunk Node Firmware Versions\n";
     print "graph_args --base 1000 --lower-limit 0\n";
     print "graph_scale no\n";
@@ -314,7 +315,7 @@ serialize_state();
 
 # all nodes graph values
 my $offline_nodes = $node_count - $sum_online_nodes;
-print "multigraph ffmuc_all_nodes\n";
+print "multigraph ${nodeprefix}_all_nodes\n";
 print "online.value $sum_online_nodes\n";
 print "offline.value $offline_nodes\n";
 print "clients.value $sum_clientcount\n";
@@ -322,7 +323,7 @@ print "clients.value $sum_clientcount\n";
 # process personal nodes/clients graph
 count_personal_nodes_clients();
 if ( scalar keys %personal_node > 0 ) {
-    print "multigraph ffmuc_personal_nodes\n";
+    print "multigraph ${nodeprefix}_personal_nodes\n";
 
     foreach my $key ( sort keys %personal_node ) {
         print $key
@@ -332,13 +333,13 @@ if ( scalar keys %personal_node > 0 ) {
 }
 
 # models
-print "multigraph ffmuc_models\n";
+print "multigraph ${nodeprefix}_models\n";
 foreach my $key ( sort keys %model_count ) {
     print "${key}.value " . $model_count{$key} . "\n";
 }
 
 # firmware
-print "multigraph ffmuc_firmware_versions\n";
+print "multigraph ${nodeprefix}_firmware_versions\n";
 foreach my $key ( sort keys %firmware_count ) {
     print "${key}.value " . $firmware_count{$key} . "\n";
 }
