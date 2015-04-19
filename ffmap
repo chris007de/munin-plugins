@@ -241,12 +241,12 @@ if ( $ARGV[0] and $ARGV[0] eq "config" ) {
     print "online.min 0\n";
     print "online.colour 00FF00\n";
     print "online.info Number of online nodes.\n";
-    print "offline.label offline\n";
-    print "offline.type GAUGE\n";
-    print "offline.draw AREASTACK\n";
-    print "offline.min 0\n";
-    print "offline.colour DDDDDD\n";
-    print "offline.info Number of offline nodes.\n";
+   # print "offline.label offline\n";
+   # print "offline.type GAUGE\n";
+   # print "offline.draw AREASTACK\n";
+   # print "offline.min 0\n";
+   # print "offline.colour DDDDDD\n";
+   # print "offline.info Number of offline nodes.\n";
     print "clients.label clients\n";
     print "clients.type GAUGE\n";
     print "clients.min 0\n";
@@ -314,10 +314,8 @@ update_last_seen_times();
 serialize_state();
 
 # all nodes graph values
-my $offline_nodes = $node_count - $sum_online_nodes;
 print "multigraph ${nodeprefix}_all_nodes\n";
 print "online.value $sum_online_nodes\n";
-print "offline.value $offline_nodes\n";
 print "clients.value $sum_clientcount\n";
 
 # process personal nodes/clients graph
