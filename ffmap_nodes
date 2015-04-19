@@ -44,10 +44,10 @@ if ( $ARGV[0] and $ARGV[0] eq "config" ) {
     foreach my $mac ( @macs ) {
     my $cleanmac = $mac;
     $cleanmac =~ s/://g;
-    print "multigraph ${nodeprefix}_clients-" . $cleanmac . "\n";
+    print "multigraph ${nodeprefix}_clients_" . $cleanmac . "\n";
     print "graph_title Clients on Node " . $mac . "\n";
     print "graph_args -l 0\n";
-    print "graph_category ${nodeprefix}_node-" . $cleanmac . "\n";
+    print "graph_category ${nodeprefix}_node_" . $cleanmac . "\n";
     print "graph_vlabel Clients\n";
     print "wifi.label wifi\n";
     print "wifi.draw AREASTACK\n";
@@ -56,20 +56,18 @@ if ( $ARGV[0] and $ARGV[0] eq "config" ) {
     print "other.draw AREASTACK\n";
     print "other.info Other connectivity.\n";
 
-    print "multigraph ${nodeprefix}_uptime-" . $cleanmac . "\n";
+    print "multigraph ${nodeprefix}_uptime_" . $cleanmac . "\n";
     print "graph_title Uptime of " . $mac . "\n";
     print "graph_args --base 1000 -l 0\n";
-    print "graph_category ${nodeprefix}_node-" . $cleanmac . "\n";
+    print "graph_category ${nodeprefix}_node_" . $cleanmac . "\n";
     print "graph_vlabel hours\n";
     print "uptime.label uptime\n";
-    print "uptime.draw AREA\n";
     print "idletime.label idletime\n";
-    print "idletime.draw AREA\n";
 
-    print "multigraph ${nodeprefix}_trafficthroughput-" . $cleanmac . "\n";
+    print "multigraph ${nodeprefix}_trafficthroughput_" . $cleanmac . "\n";
     print "graph_title Traffic throughput of " . $mac . "\n";
     print "graph_args --base 1000 --logarithmic --units=si\n";
-    print "graph_category ${nodeprefix}_node-" . $cleanmac . "\n";
+    print "graph_category ${nodeprefix}_node_" . $cleanmac . "\n";
     print "graph_vlabel bits per second\n";
     print "txbit.label txbit\n";
     print "txbit.type DERIVE\n";
@@ -93,21 +91,16 @@ if ( $ARGV[0] and $ARGV[0] eq "config" ) {
     print "forwardbit.cdef forwardbit,8,*\n";
 
 
-    print "multigraph ${nodeprefix}_traffic-" . $cleanmac . "\n";
+    print "multigraph ${nodeprefix}_traffic_" . $cleanmac . "\n";
     print "graph_title Traffic of " . $mac . "\n";
     print "graph_args --base 1024 -l 0\n";
-    print "graph_category ${nodeprefix}_node-" . $cleanmac . "\n";
+    print "graph_category ${nodeprefix}_node_" . $cleanmac . "\n";
     print "graph_vlabel bytes\n";
     print "tx.label tx\n";
-    print "tx.draw AREASTACK\n";
     print "rx.label rx\n";
-    print "rx.draw AREASTACK\n";
     print "mgmt_tx.label mgmt_tx\n";
-    print "mgmt_tx.draw AREASTACK\n";
     print "mgmt_rx.label mgmt_rx\n";
-    print "mgmt_rx.draw AREASTACK\n";
     print "forward.label forward\n";
-    print "forward.draw AREASTACK\n";
 
     }
 
@@ -142,22 +135,22 @@ my $mgmt_tx = $nodes_ref->{$mac}->{'traffic'}->{'mgmt_tx'}->{'bytes'};
 my $mgmt_rx = $nodes_ref->{$mac}->{'traffic'}->{'mgmt_rx'}->{'bytes'};
 my $forward = $nodes_ref->{$mac}->{'traffic'}->{'forward'}->{'bytes'};
 
-print "multigraph ${nodeprefix}_clients-" . $cleanmac . "\n";
+print "multigraph ${nodeprefix}_clients_" . $cleanmac . "\n";
 print "wifi.value $wifi_clients\n";
 print "other.value $other_clients\n";
 
-print "multigraph ${nodeprefix}_uptime-" . $cleanmac . "\n";
+print "multigraph ${nodeprefix}_uptime_" . $cleanmac . "\n";
 print "uptime.value $uptime\n";
 print "idletime.value $idletime\n";
 
-print "multigraph ${nodeprefix}_trafficthroughput-" . $cleanmac . "\n";
+print "multigraph ${nodeprefix}_trafficthroughput_" . $cleanmac . "\n";
 print "txbit.value $tx\n";
 print "rxbit.value $rx\n";
 print "mgmt_txbit.value $mgmt_tx\n";
 print "mgmt_rxbit.value $mgmt_rx\n";
 print "forwardbit.value $forward\n";
 
-print "multigraph ${nodeprefix}_traffic-" . $cleanmac . "\n";
+print "multigraph ${nodeprefix}_traffic_" . $cleanmac . "\n";
 print "tx.value $tx\n";
 print "rx.value $rx\n";
 print "mgmt_tx.value $mgmt_tx\n";
