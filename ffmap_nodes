@@ -26,9 +26,12 @@ my @state_vector = restore_state();
 
 sub get_node_data {
     if ( defined $nodesurl ) {
-        my $content = get( $nodesurl );
+        my $browser = LWP::UserAgent->new(
+                ssl_opts => { SSL_verify_mode => 'SSL_VERIFY_NONE'},
+        );
+        my $content = $browser->get( $nodesurl );
         die 'Could not get it!' unless defined $content;
-        $nodes_ref = decode_json($content);
+        $nodes_ref = decode_json($content->decoded_content);
         @macs = keys % { $nodes_ref };   
     }
     else {
